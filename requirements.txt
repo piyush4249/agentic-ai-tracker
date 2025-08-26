@@ -1,0 +1,6 @@
+feedparser==6.0.10
+arxiv==2.1.0
+beautifulsoup4==4.12.3
+requests==2.31.0
+PyYAML==6.0.2
+openai>=1.0.0

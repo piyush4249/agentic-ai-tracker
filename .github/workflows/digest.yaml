@@ -1,39 +1,25 @@
 name: Agentic AI Digest
-
 on:
-  workflow_dispatch: {}
   schedule:
-    - cron: "7 3 * * *"  # 03:07 UTC daily
-
+    - cron: '7 3 * * *'   # daily 03:07 UTC
+  workflow_dispatch: {}
 permissions:
-  contents: write  # needed to push generated files
-
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-
-      - name: Install deps
-        run: |
+          python-version: '3.11'
+      - run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Generate digest
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          TRACKER_DEBUG: "0"   # set "1" if you want extra logs
-        run: |
+      - run: |
           python -m src.main
-          test -f docs/index.html
-          test -f docs/data.json
-
       - name: Commit digest
         run: |
           git config user.name "agentic-bot"
